@@ -50,14 +50,14 @@ import org.baconeers.utils.MovingAverageTimer;
  * Remove or comment out the @Disabled line to add/remove this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name = "Loop Timer 1", group = "Tests")
+@TeleOp(name = "Loop Timer 2", group = "Tests")
 // @Disable
-public class LoopTimer extends LinearOpMode {
+public class LoopTimer2 extends LinearOpMode {
 
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
-        telemetry.addData("Test", "Loop timer using MovingAverageTimer.averageString()");
+        telemetry.addData("Test", "Loop timer using MovingAverageTimer.toString()");
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
@@ -70,8 +70,7 @@ public class LoopTimer extends LinearOpMode {
         while (opModeIsActive()) {
             avg.update();
 
-            telemetry.addData("Status", avg.averageString());
-//            telemetry.addData("Status", avg.toString());
+            telemetry.addData("Status", avg.toString());
             telemetry.update();
 
             // Allow other threads their fair share of the CPU

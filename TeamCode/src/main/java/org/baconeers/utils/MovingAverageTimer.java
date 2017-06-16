@@ -6,17 +6,31 @@ package org.baconeers.utils;
 
 public class MovingAverageTimer {
 
-    private int num_elements;
-    private long count;
-    private long times[];
-    private long moving_total;
-    private long running_total;
-    private long previousTime;
-    private int current_index;
-    private double moving_average;
-    private double resolution;
-    private String format_str;
-    private String format2_str;
+    // A ring buffer is used to keep track of a moving average
+    private final int ringBufferSize;
+    private final long loopTimeRingBuffer[];
+    private int ringBufferIndex = 0;
+
+    private long loopCount = 0;
+
+    private long movingTotal = 0;
+    private long runningTotal = 0;
+    private long previousTime = 0;
+
+    private double movingAverage = 0;
+    private double minMovingAverage = Double.MAX_VALUE;
+    private double maxMovingAverage = Double.MIN_VALUE;
+
+    private double average = 0.0;
+    private double minAverage = Double.MAX_VALUE;
+    private double maxAverage = Double.MIN_VALUE;
+
+    private double minLoopTime = Double.MAX_VALUE;
+    private double maxLoopTime = Double.MIN_VALUE;
+
+    private final double resolution;
+    private final String avgFormatStr;
+    private final String toStringFormatStr;
 
     public enum Resolution {
         SECONDS,
@@ -42,84 +56,128 @@ public class MovingAverageTimer {
     }
 
     public MovingAverageTimer(int num, Resolution resolution) {
-        count = 0;
-        moving_total = 0;
-        running_total = 0;
         previousTime = System.nanoTime();
-        num_elements = num;
-        times = new long[num_elements];
-        current_index = 0;
-        moving_average = 0.0;
+        ringBufferSize = num;
+        loopTimeRingBuffer = new long[ringBufferSize];
+
+        String hdr = String.format("\n%-12s%-12s%-12s%-12s", "Loops", "TotalTime", "MovAvg", "Avg");
+
         switch (resolution) {
             case SECONDS:
                 this.resolution = SECOND_IN_NANO;
-                format_str = "%3.3f secs";
-                format2_str = "\nLoops      TotalTime   MovingAvg Average (in sec)\n%-10d%-12.3f%-10.3f%-10.3f";
+                avgFormatStr = "%3.3f secs";
+                toStringFormatStr = hdr + " seconds\n%-12d%-12.3f%-12.3f%-12.3f\n min        %-12.3f%-12.3f%-12.3f\n max        %-12.3f%-12.3f%-12.3f";
 
                 break;
             case MILLISECONDS:
             default:
                 this.resolution = MILLIS_IN_NANO;
-                format_str = "%3.3f msecs";
-                format2_str = "\nLoops      TotalTime   MovingAvg Average (in msec)\n%-10d%-12.3f%-10.3f%-10.3f";
+                avgFormatStr = "%3.3f msecs";
+                toStringFormatStr = hdr + "msecs\n%-12d%-12.3f%-12.3f%-12.3f\n min        %-12.3f%-12.3f%-12.3f\n max        %-12.3f%-12.3f%-12.3f";
                 break;
         }
     }
 
     public void update() {
         long now = System.nanoTime();
-        long diff = now - previousTime;
+        long loopTime = now - previousTime;
         previousTime = now;
 
+        if (loopCount > 0) {
+            minLoopTime = Math.min(minLoopTime, loopTime);
+            maxLoopTime = Math.max(maxLoopTime, loopTime);
+        }
+
         // Adjust the running total
-        moving_total = moving_total - times[current_index] + diff;
-        running_total = running_total + diff;
+        movingTotal = movingTotal - loopTimeRingBuffer[ringBufferIndex] + loopTime;
+        runningTotal = runningTotal + loopTime;
 
         // Add the new value
-        times[current_index] = diff;
+        loopTimeRingBuffer[ringBufferIndex] = loopTime;
 
         // wrap the current index
-        current_index = (current_index + 1) % num_elements;
+        ringBufferIndex = (ringBufferIndex + 1) % ringBufferSize;
 
-        count += 1;
+        loopCount += 1;
 
-        if (count < num_elements) {
-            if (count == 0) {
-                moving_average = 0.0;
+        if (loopCount < ringBufferSize) {
+            if (loopCount == 0) {
+                movingAverage = 0.0;
             } else {
-                moving_average = (double) moving_total / (double) count / resolution;
+                movingAverage = (double) movingTotal / (double) loopCount / resolution;
             }
+            // Temporarily fill the min/max movingAverage
+            minMovingAverage = Math.min(minMovingAverage, movingAverage);
+            maxMovingAverage = Math.max(maxMovingAverage, movingAverage);
+
         } else {
-            moving_average = (double) moving_total / (double) num_elements / resolution;
+            movingAverage = (double) movingTotal / (double) ringBufferSize / resolution;
+
+            // Reset the min/max movingAverage values the each time the buffer is filled
+            if (ringBufferIndex == 0) {
+                minMovingAverage = movingAverage;
+                maxMovingAverage = movingAverage;
+            } else {
+                minMovingAverage = Math.min(minMovingAverage, movingAverage);
+                maxMovingAverage = Math.max(maxMovingAverage, movingAverage);
+            }
         }
+
+        average = (double) runningTotal / loopCount / resolution;
+        minAverage = Math.min(minAverage, average);
+        maxAverage = Math.max(maxAverage, average);
     }
 
     public long count() {
-        return count;
+        return loopCount;
     }
 
     public double movingAverage() {
-        return moving_average;
+        return movingAverage;
+    }
+
+    public double minMovingAverage() {
+        return minMovingAverage;
+    }
+
+    public double maxMovingAverage() {
+        return maxMovingAverage;
     }
 
     public String movingAverageString() {
-        return String.format(format_str, moving_average);
+        return String.format(avgFormatStr, movingAverage);
     }
 
     public double average() {
-        if (count == 0) {
-            return 0.0;
-        } else {
-            return (double) running_total / (double) count / resolution;
-        }
+        return average;
+    }
+
+    public double minAverage() {
+        return minAverage;
+    }
+
+    public double maxAverage() {
+        return maxAverage;
+    }
+
+    public double minLoopTime() {
+        return minLoopTime / resolution;
+    }
+
+    public double maxLoopTime() {
+        return maxLoopTime / resolution;
+    }
+
+    public double elapsedTime() {
+        return runningTotal / resolution;
     }
 
     public String averageString() {
-        return String.format(format_str, average());
+        return String.format(avgFormatStr, average);
     }
 
     @Override
     public String toString() {
-        return String.format(format2_str,count,running_total/resolution,moving_average,average());
+        return String.format(toStringFormatStr, loopCount, elapsedTime(), movingAverage, average, minLoopTime(), minMovingAverage, minAverage, maxLoopTime(), maxMovingAverage, maxAverage);
     }
 }
