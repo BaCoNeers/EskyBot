@@ -36,6 +36,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.baconeers.utils.MovingAverageTimer;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 /**
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
@@ -50,15 +51,21 @@ import org.baconeers.utils.MovingAverageTimer;
  * Remove or comment out the @Disabled line to add/remove this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name = "Loop Timer 1", group = "Tests")
+@TeleOp(name = "Loop Timer 3", group = "Tests")
 // @Disable
-public class LoopTimer extends LinearOpMode {
+public class LoopTimer3 extends LinearOpMode {
 
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
-        telemetry.addData("Test", "Loop timer using MovingAverageTimer.averageString()");
+        telemetry.addData("Test", "Loop timer using TelemetryItems");
         telemetry.update();
+
+        // Stop the Telemetry class from auto clearing at each loop
+        telemetry.setAutoClear(false);
+
+        // Create a Telemetry.Item that we can update in the run loop
+        Telemetry.Item avgItem = telemetry.addData("average" , "%12.3f", 0.0);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -70,7 +77,8 @@ public class LoopTimer extends LinearOpMode {
         while (opModeIsActive()) {
             avg.update();
 
-            telemetry.addData("Status", avg.averageString());
+            // Update the value
+            avgItem.setValue("%12.3f",avg.movingAverage());
             telemetry.update();
 
             // Allow other threads their fair share of the CPU
