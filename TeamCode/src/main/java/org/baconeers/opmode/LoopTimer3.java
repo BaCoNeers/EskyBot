@@ -52,11 +52,12 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  */
 
 @TeleOp(name = "Loop Timer 3", group = "Tests")
-// @Disable
+// @Disabled
 public class LoopTimer3 extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        // (driver presses INIT)
         telemetry.addData("Status", "Initialized");
         telemetry.addData("Test", "Loop timer using TelemetryItems");
         telemetry.update();
@@ -64,16 +65,16 @@ public class LoopTimer3 extends LinearOpMode {
         telemetry.setAutoClear(false);
         Telemetry.Item avgItem = telemetry.addData("average" , "%12.3f", 0.0);
 
-
-
-        // Wait for the game to start (driver presses PLAY)
+        // (driver presses PLAY)
         waitForStart();
 
         // Create a MovingAverageTimer object so that we can time each iteration of the loop
         MovingAverageTimer avg = new MovingAverageTimer();
 
-        // run until the end of the match (driver presses STOP)
+        // loop until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+
+            // Update and recalculate the average
             avg.update();
 
             avgItem.setValue("%12.3f",avg.average());

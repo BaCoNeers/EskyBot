@@ -51,23 +51,26 @@ import org.baconeers.utils.MovingAverageTimer;
  */
 
 @TeleOp(name = "Loop Timer 2", group = "Tests")
-// @Disable
+// @Disabled
 public class LoopTimer2 extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        // (driver presses INIT)
         telemetry.addData("Status", "Initialized");
         telemetry.addData("Test", "Loop timer using MovingAverageTimer.toString()");
         telemetry.update();
 
-        // Wait for the game to start (driver presses PLAY)
+        // (driver presses PLAY)
         waitForStart();
 
         // Create a MovingAverageTimer object so that we can time each iteration of the loop
         MovingAverageTimer avg = new MovingAverageTimer();
 
-        // run until the end of the match (driver presses STOP)
+        // loop until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+
+            // Update and recalculate the average
             avg.update();
 
             telemetry.addData("Status", avg.toString());
