@@ -71,6 +71,7 @@ public class LoopTimer extends LinearOpMode {
             avg.update();
 
             telemetry.addData("Status", avg.averageString());
+//            telemetry.addData("Status", avg.toString());
             telemetry.update();
 
             // Allow other threads their fair share of the CPU

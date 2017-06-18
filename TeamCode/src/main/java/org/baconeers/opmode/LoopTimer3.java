@@ -61,11 +61,10 @@ public class LoopTimer3 extends LinearOpMode {
         telemetry.addData("Test", "Loop timer using TelemetryItems");
         telemetry.update();
 
-        // Stop the Telemetry class from auto clearing at each loop
         telemetry.setAutoClear(false);
-
-        // Create a Telemetry.Item that we can update in the run loop
         Telemetry.Item avgItem = telemetry.addData("average" , "%12.3f", 0.0);
+
+
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -77,8 +76,7 @@ public class LoopTimer3 extends LinearOpMode {
         while (opModeIsActive()) {
             avg.update();
 
-            // Update the value
-            avgItem.setValue("%12.3f",avg.movingAverage());
+            avgItem.setValue("%12.3f",avg.average());
             telemetry.update();
 
             // Allow other threads their fair share of the CPU
