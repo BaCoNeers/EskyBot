@@ -32,6 +32,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.baconeers.opmode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -51,7 +52,7 @@ import org.baconeers.utils.MovingAverageTimer;
  */
 
 @TeleOp(name = "Loop Timer 1", group = "Tests")
-//@Disabled
+@Disabled
 public class LoopTimer1 extends LinearOpMode {
 
     @Override
