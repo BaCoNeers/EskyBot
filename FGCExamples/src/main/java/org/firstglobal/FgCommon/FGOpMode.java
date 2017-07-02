@@ -3,7 +3,8 @@ package org.firstglobal.FgCommon;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 /**
- * OpMode Abstract class that offers addition abdtraction for opMode developers including catch-all error handling
+ * OpMode Abstract class that offers additional abstraction for opMode developers
+ * including catch-all error handling
  */
 public abstract class FGOpMode extends LinearOpMode {
 
@@ -45,20 +46,19 @@ public abstract class FGOpMode extends LinearOpMode {
             setup();
             onInit();
         } catch (Throwable e) {
-            ErrorUtil.handleCatchAllException(e,telemetry);
+            ErrorUtil.handleCatchAllException(e, telemetry);
         }
 
         waitForStart();
 
         onStart();
 
-
         while (opModeIsActive() && !operationsCompleted) {
 
             try {
                 activeLoop();
             } catch (Throwable e) {
-                ErrorUtil.handleCatchAllException(e, telemetry);;
+                ErrorUtil.handleCatchAllException(e, telemetry);
             }
 
             telemetry.update();
@@ -69,8 +69,6 @@ public abstract class FGOpMode extends LinearOpMode {
         while (opModeIsActive()) {
             idle();
         }
-
-
     }
 
     private void setup() {
