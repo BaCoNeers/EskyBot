@@ -21,7 +21,14 @@ public abstract class FGOpMode extends LinearOpMode {
      * override to this method to perform one time operations after start is pressed
      */
     protected void onStart() throws InterruptedException {
-        clearTelemetryData();
+        // Clear the telemetry data created in the init loop unless autoClear is false, then only
+        // delete the ones that are to be retained.
+        if (telemetry.isAutoClear()) {
+            telemetry.clear();
+        }
+        else {
+            clearTelemetryData();
+        }
     }
 
     /**

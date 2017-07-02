@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 
 /**
  * Operation to assist with Gamepad actions on DCMotors
@@ -34,6 +36,7 @@ public class GamePadMotor extends OpModeComponent {
     private Gamepad gamepad;
     private static final float defaultButtonPower = 0.3f;
     private float buttonPower ;
+    private Telemetry.Item powerItem  = null;
 
     /**
      * Constructor for operation.  Telemetry enabled by default.
@@ -66,6 +69,9 @@ public class GamePadMotor extends OpModeComponent {
         this.control = control;
         this.buttonPower = buttonPower;
 
+        if (!getOpMode().telemetry.isAutoClear()) {
+            powerItem = getOpMode().telemetry.addData(control.toString(), "%.3f", 0.0);
+        }
     }
 
 
@@ -96,7 +102,12 @@ public class GamePadMotor extends OpModeComponent {
                 break;
         }
 
-        getOpMode().telemetry.addData("setting power: " + control.toString(), power);
+        if (powerItem != null) {
+            powerItem.setValue(power);
+        }
+        else {
+            getOpMode().telemetry.addData("setting power: " + control.toString(), power);
+        }
 
         motor.setPower(power);
 
@@ -104,7 +115,7 @@ public class GamePadMotor extends OpModeComponent {
 
     public void startRunMode(DcMotor.RunMode runMode) throws InterruptedException {
         motor.setMode(runMode);
-        getOpMode().waitOneFullHardwareCycle();
+        getOpMode().idle();
 
     }
 

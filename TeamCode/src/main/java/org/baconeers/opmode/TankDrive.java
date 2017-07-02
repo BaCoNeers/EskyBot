@@ -6,6 +6,7 @@ import org.baconeers.configurations.EskyBot;
 import org.baconeers.utils.MovingAverageTimer;
 import org.firstglobal.FgCommon.FGOpMode;
 import org.firstglobal.FgCommon.GamePadMotor;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 @TeleOp (group = "Tank Drive")
 //@Disabled
@@ -15,6 +16,7 @@ public class TankDrive extends FGOpMode {
     private GamePadMotor  leftWheel;
     private GamePadMotor  rightWheel;
     private MovingAverageTimer avg;
+    private Telemetry.Item avgItem = null;
 
 
     /**
@@ -24,7 +26,7 @@ public class TankDrive extends FGOpMode {
     protected void onInit() {
 
         robot = EskyBot.newConfig(hardwareMap, telemetry);
-
+        telemetry.setAutoClear(false);
     }
 
     /**
@@ -38,6 +40,9 @@ public class TankDrive extends FGOpMode {
         rightWheel = new GamePadMotor(this,  gamepad1, robot.driveRight, GamePadMotor.Control.RIGHT_STICK_Y);
 
         avg = new MovingAverageTimer(100);
+        if (!telemetry.isAutoClear()) {
+            avgItem = telemetry.addData("Avg","%.3f ms",0.0);
+        }
     }
 
     /**
@@ -52,7 +57,13 @@ public class TankDrive extends FGOpMode {
         rightWheel.update();
 
         avg.update();
-        telemetry.addData("Avg","%5.3f ms",avg.movingAverage());
+
+        if (avgItem != null) {
+            avgItem.setValue("%.3f ms",avg.movingAverage());
+        }
+        else {
+            telemetry.addData("Avg", "%5.3f ms", avg.movingAverage());
+        }
     }
 
 }
