@@ -24,7 +24,6 @@ public class SteerDrive extends BaconOpMode {
     protected void onInit() {
 
         robot = EskyBot.newConfig(hardwareMap, telemetry);
-        avgItem = telemetry.addData("Avg", "%.3f ms", 0.0);
 
     }
 
@@ -36,6 +35,7 @@ public class SteerDrive extends BaconOpMode {
     protected void onStart() throws InterruptedException {
         super.onStart();
         drive = new GamePadSteerDrive(this, gamepad1, robot.driveLeft, robot.driveRight);
+        avgItem = telemetry.addData("Avg", "%.3f ms", 0.0);
     }
 
     /**
@@ -49,7 +49,7 @@ public class SteerDrive extends BaconOpMode {
         drive.update();
 
         movingAverageTimer.update();
-        avgItem.setValue("%.3f ms", 0.0);
+        avgItem.setValue("%.3f ms", movingAverageTimer.movingAverage());
 
     }
 
