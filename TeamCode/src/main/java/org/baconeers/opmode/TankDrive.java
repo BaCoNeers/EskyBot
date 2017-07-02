@@ -3,6 +3,7 @@ package org.baconeers.opmode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.baconeers.configurations.EskyBot;
+import org.baconeers.utils.MovingAverageTimer;
 import org.firstglobal.FgCommon.FGOpMode;
 import org.firstglobal.FgCommon.GamePadMotor;
 
@@ -13,6 +14,7 @@ public class TankDrive extends FGOpMode {
     private EskyBot robot;
     private GamePadMotor  leftWheel;
     private GamePadMotor  rightWheel;
+    private MovingAverageTimer avg;
 
 
     /**
@@ -34,6 +36,8 @@ public class TankDrive extends FGOpMode {
         super.onStart();
         leftWheel = new GamePadMotor(this,  gamepad1, robot.driveLeft, GamePadMotor.Control.LEFT_STICK_Y);
         rightWheel = new GamePadMotor(this,  gamepad1, robot.driveRight, GamePadMotor.Control.RIGHT_STICK_Y);
+
+        avg = new MovingAverageTimer(100);
     }
 
     /**
@@ -47,6 +51,8 @@ public class TankDrive extends FGOpMode {
         leftWheel.update();
         rightWheel.update();
 
+        avg.update();
+        telemetry.addData("Avg","%5.3f ms",avg.movingAverage());
     }
 
 }
