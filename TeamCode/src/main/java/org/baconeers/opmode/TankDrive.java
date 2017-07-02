@@ -8,7 +8,7 @@ import org.firstglobal.FgCommon.FGOpMode;
 import org.firstglobal.FgCommon.GamePadMotor;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-@TeleOp (group = "Tank Drive")
+@TeleOp (name = "Tank Drive",group="Drive")
 //@Disabled
 public class TankDrive extends FGOpMode {
 

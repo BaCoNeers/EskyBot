@@ -53,7 +53,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  */
 
 @TeleOp(name = "Loop Timer 3", group = "Tests")
-@Disabled
+//@Disabled
 public class LoopTimer3 extends LinearOpMode {
 
     @Override

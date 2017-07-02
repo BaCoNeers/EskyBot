@@ -35,8 +35,12 @@ package org.baconeers.opmode;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.HardwareDevice;
 
 import org.baconeers.utils.MovingAverageTimer;
+
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
@@ -51,15 +55,31 @@ import org.baconeers.utils.MovingAverageTimer;
  * Remove or comment out the @Disabled line to add/remove this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name = "Loop Timer 1", group = "Tests")
+@TeleOp(name = "List Hardware", group = "Tests")
 //@Disabled
-public class LoopTimer1 extends LinearOpMode {
+public class ListHardware extends LinearOpMode {
 
     @Override
     public void runOpMode() {
         // (driver presses INIT)
         telemetry.addData("Status", "Initialized");
         telemetry.addData("Test", "Loop timer using MovingAverageTimer.averageString()");
+
+        Iterator<HardwareDevice> iter = hardwareMap.iterator();
+
+        while (iter.hasNext())
+        {
+            HardwareDevice dev = iter.next();
+            Set<String> names = hardwareMap.getNamesOf(dev);
+            if (names.size() > 0)
+            {
+                for (String name:names) {
+                    String nameStr = String.format("%-20s",name);
+                    telemetry.addData(nameStr,dev.getDeviceName());
+                }
+            }
+        }
+
         telemetry.update();
 
         // (driver presses PLAY)

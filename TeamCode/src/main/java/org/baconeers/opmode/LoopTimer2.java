@@ -52,7 +52,7 @@ import org.baconeers.utils.MovingAverageTimer;
  */
 
 @TeleOp(name = "Loop Timer 2", group = "Tests")
-@Disabled
+//@Disabled
 public class LoopTimer2 extends LinearOpMode {
 
     @Override
