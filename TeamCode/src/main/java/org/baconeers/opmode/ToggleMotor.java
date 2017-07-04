@@ -26,6 +26,9 @@ public class ToggleMotor extends BaconOpMode {
     protected void onInit() {
 
         robot = EskyBot.newConfig(hardwareMap, telemetry);
+
+        avgItem = telemetry.addData("Avg", "%.3f ms", 0.0);
+        avgItem.setRetained(true);
     }
 
     /**
@@ -38,7 +41,7 @@ public class ToggleMotor extends BaconOpMode {
         // TODO: shift this to onInit and adjust the telemetry clear to leave them intact
         left = new GamePadToggleMotor(this,gamepad1,robot.driveLeft, GamePadToggleMotor.Control.A, 0.5f);
         right = new GamePadToggleMotor(this,gamepad1,robot.driveRight, GamePadToggleMotor.Control.B, 0.5f);
-        avgItem = telemetry.addData("Avg", "%.3f ms", 0.0);
+
     }
 
     /**

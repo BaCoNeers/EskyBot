@@ -49,13 +49,15 @@ public class GamePadToggleMotor extends BaconComponent {
      * @param power   power to apply when using gamepad buttons
      */
     public GamePadToggleMotor(BaconOpMode opMode, Gamepad gamepad, DcMotor motor, Control control, float power) {
-
         super(opMode);
+
         this.gamepad = gamepad;
         this.motor = motor;
         this.control = control;
         this.motorPower = power;
-        this.item = opMode.telemetry.addData("Control " + control.name(),0.0f);
+
+        item = opMode.telemetry.addData("Control " + control.name(), 0.0f);
+        item.setRetained(true);
     }
 
 
@@ -66,14 +68,13 @@ public class GamePadToggleMotor extends BaconComponent {
         // Only toggle when the button state changes from false to true, ie when the
         // button is pressed down (and not when the button comes back up)
         boolean pressed = buttonPressed();
-        if (pressed && lastButtonState != pressed)
-        {
+        if (pressed && lastButtonState != pressed) {
             motorOn = !motorOn;
             float power = motorOn ? motorPower : 0.0f;
             motor.setPower(power);
             item.setValue(power);
         }
-        lastButtonState  = pressed;
+        lastButtonState = pressed;
     }
 
     private boolean buttonPressed() {
@@ -134,7 +135,6 @@ public class GamePadToggleMotor extends BaconComponent {
 
         return buttonPressed;
     }
-
 
 
 }

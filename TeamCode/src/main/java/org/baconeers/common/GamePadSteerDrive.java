@@ -15,10 +15,10 @@ public class GamePadSteerDrive extends BaconComponent {
     final private DcMotor leftMotor;
     final private DcMotor rightMotor;
     final private Gamepad gamepad;
-    private Telemetry.Item leftPowerItem = null;
-    private Telemetry.Item rightPowerItem = null;
-    private Telemetry.Item steerPowerItem = null;
-    private Telemetry.Item rawPowerItem = null;
+    final private Telemetry.Item leftPowerItem ;
+    final private Telemetry.Item rightPowerItem;
+    final private Telemetry.Item steerPowerItem;
+    final private Telemetry.Item rawPowerItem;
 
 
     public GamePadSteerDrive(BaconOpMode opMode, Gamepad gamepad, DcMotor leftMotor, DcMotor rightMotor) {
@@ -27,10 +27,15 @@ public class GamePadSteerDrive extends BaconComponent {
         this.gamepad = gamepad;
         this.leftMotor = leftMotor;
         this.rightMotor = rightMotor;
+
         leftPowerItem = getOpMode().telemetry.addData("Left power", "%.2f", 0.0f);
+        leftPowerItem.setRetained(true);
         rightPowerItem = getOpMode().telemetry.addData("Right power", "%.2f", 0.0f);
+        rightPowerItem.setRetained(true);
         steerPowerItem = getOpMode().telemetry.addData("steer power", "%.2f", 0.0f);
+        steerPowerItem.setRetained(true);
         rawPowerItem = getOpMode().telemetry.addData("raw power", "%.2f", 0.0f);
+        rawPowerItem.setRetained(true);
     }
 
     /*
