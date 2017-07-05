@@ -2,9 +2,6 @@ package org.baconeers.common;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
-
-import org.firstglobal.FgCommon.FGOpMode;
-import org.firstglobal.FgCommon.OpModeComponent;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 
