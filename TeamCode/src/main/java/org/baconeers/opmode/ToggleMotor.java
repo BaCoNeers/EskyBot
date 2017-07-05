@@ -2,8 +2,10 @@ package org.baconeers.opmode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.baconeers.common.BaconComponent;
 import org.baconeers.common.BaconOpMode;
-import org.baconeers.common.GamePadSteerDrive;
+import org.baconeers.common.ButtonControl;
+import org.baconeers.common.GamePadSafeMotor;
 import org.baconeers.common.GamePadToggleMotor;
 import org.baconeers.configurations.EskyBot;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -15,7 +17,7 @@ public class ToggleMotor extends BaconOpMode {
 
     private EskyBot robot;
     private GamePadToggleMotor left;
-    private GamePadToggleMotor right;
+    private GamePadSafeMotor right;
     private Telemetry.Item avgItem;
 
 
@@ -29,6 +31,9 @@ public class ToggleMotor extends BaconOpMode {
 
         avgItem = telemetry.addData("Avg", "%.3f ms", 0.0);
         avgItem.setRetained(true);
+
+        left = new GamePadToggleMotor(this,gamepad1,robot.driveLeft, ButtonControl.A, 0.5f);
+        right = new GamePadSafeMotor(this,gamepad1,robot.driveRight, ButtonControl.B, ButtonControl.Y, 0.5f,false);
     }
 
     /**
@@ -38,9 +43,6 @@ public class ToggleMotor extends BaconOpMode {
     @Override
     protected void onStart() throws InterruptedException {
         super.onStart();
-        // TODO: shift this to onInit and adjust the telemetry clear to leave them intact
-        left = new GamePadToggleMotor(this,gamepad1,robot.driveLeft, GamePadToggleMotor.Control.A, 0.5f);
-        right = new GamePadToggleMotor(this,gamepad1,robot.driveRight, GamePadToggleMotor.Control.B, 0.5f);
 
     }
 
@@ -51,7 +53,7 @@ public class ToggleMotor extends BaconOpMode {
     @Override
     protected void activeLoop() throws InterruptedException {
 
-        //update the drive motors with the gamepad  values
+        // Update the drive motors with the gamepad  values
         left.update();
         right.update();
 

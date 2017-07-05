@@ -24,6 +24,7 @@ public abstract class BaconOpMode extends LinearOpMode {
      */
     protected void onStart() throws InterruptedException {
         clearTelemetryData();
+        movingAverageTimer.reset();
     }
 
     /**
