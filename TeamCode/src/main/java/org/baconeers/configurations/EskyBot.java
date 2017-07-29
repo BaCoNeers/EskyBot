@@ -1,5 +1,6 @@
 package org.baconeers.configurations;
 
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -15,9 +16,12 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  */
 public class EskyBot extends RobotConfiguration {
 
-    //motors
+    // motors
     public DcMotor driveLeft;
     public DcMotor driveRight;
+
+    // sensors
+    public ColorSensor colorSensor;
 
 
     /**
@@ -36,6 +40,7 @@ public class EskyBot extends RobotConfiguration {
 
         driveRight = (DcMotor) getHardwareOn("driveRight", hardwareMap.dcMotor);
 
+        colorSensor = (ColorSensor) getHardwareOn("color",hardwareMap.colorSensor);
     }
 
 

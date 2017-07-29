@@ -28,6 +28,12 @@ public abstract class BaconOpMode extends LinearOpMode {
     }
 
     /**
+     * override to this method to perform one time operations after the activeLoop finishes
+     */
+    protected void onStop() throws InterruptedException {
+    }
+
+    /**
      * Implement this method to define the code to run when the Start button is pressed on the Driver station.
      * This method will be called on each hardware cycle
      *
@@ -45,32 +51,37 @@ public abstract class BaconOpMode extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         try {
-            setup();
-            onInit();
-        } catch (Throwable e) {
-            ErrorUtil.handleCatchAllException(e, telemetry);
-        }
-
-        waitForStart();
-
-        onStart();
-
-        while (opModeIsActive() && !operationsCompleted) {
-
             try {
-                activeLoop();
+                setup();
+                onInit();
             } catch (Throwable e) {
                 ErrorUtil.handleCatchAllException(e, telemetry);
             }
 
-            movingAverageTimer.update();
-            telemetry.update();
-            idle();
-        }
+            waitForStart();
 
-        //wait for user to hit stop
-        while (opModeIsActive()) {
-            idle();
+            onStart();
+
+            while (opModeIsActive() && !operationsCompleted) {
+
+                try {
+                    activeLoop();
+                } catch (Throwable e) {
+                    ErrorUtil.handleCatchAllException(e, telemetry);
+                }
+
+                movingAverageTimer.update();
+                telemetry.update();
+                idle();
+            }
+
+            //wait for user to hit stop
+            while (opModeIsActive()) {
+                idle();
+            }
+        }
+        finally {
+            onStop();
         }
     }
 
