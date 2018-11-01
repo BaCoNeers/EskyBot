@@ -26,6 +26,8 @@ public class ColorSensorTest extends BaconOpMode {
     private Telemetry.Item argbItem = null;
     private ColorSensorThread colorSensor = null;
 
+
+
     /**
      * Implement this method to define the code to run when the Init button is pressed on the Driver station.
      */
